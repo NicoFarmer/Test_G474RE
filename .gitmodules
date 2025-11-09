@@ -1,0 +1,6 @@
+[submodule "ext/libElectrobotG474"]
+	path = ext/libElectrobotG474
+	url = https://github.com/CRLG/libElectrobotG474
+[submodule "ext/CppRobLib"]
+	path = ext/CppRobLib
+	url = https://github.com/CRLG/CppRobLib
