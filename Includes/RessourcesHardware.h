@@ -20,13 +20,8 @@ extern "C" {
 
 void setLedBuiltin(bool state);
 void toggleLedBuiltin();
-void CdeMoteur1(float cde_pourcent);
-void CdeMoteur2(float cde_pourcent);
-void CdeServo1(int ppm1500);
-void CdeServo2(int ppm1500);
-void CdeServo3(int ppm1500);
-short getCodeur1();
-short getCodeur2();
+void CdeMoteur(unsigned char num_moteur, float cde_pourcent);
+void CdeServo(unsigned char num_servo, unsigned int pulse_usec);
 signed short getCodeur(int num);
 unsigned int readAnalog(int channel);
 float readAnalogVolt(int channel);

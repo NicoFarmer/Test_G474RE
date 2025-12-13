@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 int main_app(void);
-void irq_uart2();
+void irq_uart_stlink();
 
 #ifdef __cplusplus
 }

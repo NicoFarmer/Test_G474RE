@@ -72,7 +72,6 @@ void CGlobale::SequenceurModePiloteLaBotBox(void)
     // ______________________________
     cpt200msec++;
     if (cpt200msec >= TEMPO_200msec) {
-        HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
         cpt200msec = 0;
     }
     // ______________________________

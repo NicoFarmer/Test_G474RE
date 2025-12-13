@@ -64,15 +64,30 @@ void CGlobale::SequenceurModePiloteTerminal(void)
     cpt10msec++;
     if (cpt10msec >= TEMPO_10msec) {
         cpt10msec = 0;
-
-        m_asservissement_position.Traitement();
-        m_asservissement_vitesse.Traitement();
+        unsigned char rxdata[2], txdata[2]= {0xF0, 0x69};
+        HAL_SPI_TransmitReceive(&hspi2, txdata, rxdata, 2, 100);
     }
 
     // ______________________________
     cpt20msec++;
     if (cpt20msec >= TEMPO_20msec) {
         cpt20msec = 0;
+
+        HAL_GPIO_WritePin(Mot1_Sens1_GPIO_Port, Mot1_Sens1_Pin, (GPIO_PinState)test_Mot1_Sens1);
+        HAL_GPIO_WritePin(Mot1_Sens2_GPIO_Port, Mot1_Sens2_Pin, (GPIO_PinState)test_Mot1_Sens2);
+        HAL_GPIO_WritePin(Mot2_Sens1_GPIO_Port, Mot2_Sens1_Pin, (GPIO_PinState)test_Mot2_Sens1);
+        HAL_GPIO_WritePin(Mot2_Sens2_GPIO_Port, Mot2_Sens2_Pin, (GPIO_PinState)test_Mot2_Sens2);
+        HAL_GPIO_WritePin(Mot3_Sens1_GPIO_Port, Mot3_Sens1_Pin, (GPIO_PinState)test_Mot3_Sens1);
+        HAL_GPIO_WritePin(Mot3_Sens2_GPIO_Port, Mot3_Sens2_Pin, (GPIO_PinState)test_Mot3_Sens2);
+
+        HAL_GPIO_WritePin(Led1_GPIO_Port, Led1_Pin, (GPIO_PinState)test_Led1);
+        HAL_GPIO_WritePin(Led2_GPIO_Port, Led2_Pin, (GPIO_PinState)test_Led2);
+        HAL_GPIO_WritePin(Cde_Mosfet_GPIO_Port, Cde_Mosfet_Pin, (GPIO_PinState)test_CdeMosfet);
+
+        test_Etor1 = HAL_GPIO_ReadPin(Etor1_GPIO_Port, Etor1_Pin);
+        test_Etor2 = HAL_GPIO_ReadPin(Etor2_GPIO_Port, Etor2_Pin);
+        test_Etor3 = HAL_GPIO_ReadPin(Etor3_GPIO_Port, Etor3_Pin);
+
     }
 
 
@@ -80,77 +95,47 @@ void CGlobale::SequenceurModePiloteTerminal(void)
     cpt50msec++;
     if (cpt50msec >= TEMPO_50msec) {
         cpt50msec = 0;
+        toggleLedBuiltin();
+        //printf("%d\n\r", HAL_GetTick());
     }
 
     // ______________________________
     cpt100msec++;
     if (cpt100msec >= TEMPO_100msec) {
         cpt100msec = 0;
+/*
+        unsigned char c='4';
+        unsigned char r='0';
+
+        HAL_UART_Transmit(&huart4, &c, 1, 100);
+        if (HAL_UART_Receive(&huart4, &r, 1, 100) == HAL_OK) {
+        	printf("[%d] UART4: %c\n\r", HAL_GetTick(), r);
+        }
+*/
     }
 
     // ______________________________
     cpt200msec++;
     if (cpt200msec >= TEMPO_200msec) {
         cpt200msec = 0;
-        //printf("POS: %f / Vit=%f / Codeur=%ld\n\r", m_asservissement_position.getPosition(), m_asservissement_vitesse.getVitesse(), m_codeurs.m_CumulCodeurPosition2);
+/*
+        unsigned char c='5';
+        unsigned char r='0';
+        HAL_UART_Transmit(&huart5, &c, 1, 100);
+        if (HAL_UART_Receive(&huart5, &r, 1, 100) == HAL_OK) {
+        	printf("[%d] UART5: %c\n\r", HAL_GetTick(), r);
+        }
+*/
     }
     // ______________________________
     cpt500msec++;
     if (cpt500msec >= TEMPO_500msec) {
         cpt500msec = 0;
-
-        toggleLedBuiltin();
     }
     // ______________________________
     cpt1sec++;
     if (cpt1sec >= TEMPO_1sec) {
         cpt1sec = 0;
-
-        //printf("+100 pas\n\r");
-        //SimuPasCodeurs(100);
-        //printf("  > [%d] Codeur=%d\n\r",HAL_GetTick(), getCodeur2());
     }
 
 }
-
-
-
-void CGlobale::SimuPasCodeurs(int count)
-{
-	int _tempo = 100;
-
-	printf("\n\r+%d pas : Compteur avant: %ld\n\r", count*4, m_codeurs.m_CumulCodeurPosition2);
-	if (count > 0) {
-		for (int i=0; i<count; i++) {
-			WRITE_REG(GPIOB->ODR, 0x00);
-			for (int t=0; t<=_tempo; t++);
-			WRITE_REG(GPIOB->ODR, 0x80);
-			for (int t=0; t<=_tempo; t++);
-			WRITE_REG(GPIOB->ODR, 0x81);
-			for (int t=0; t<=_tempo; t++);
-			WRITE_REG(GPIOB->ODR, 0x01);
-			for (int t=0; t<=_tempo; t++);
-			WRITE_REG(GPIOB->ODR, 0x00);
-			for (int t=0; t<=_tempo; t++);
-			m_codeurs.Traitement();
-		}
-	}
-	else {
-		for (int i=0; i<(-count); i++) {
-			WRITE_REG(GPIOB->ODR, 0x00);
-			for (int t=0; t<=_tempo; t++);
-			WRITE_REG(GPIOB->ODR, 0x01);
-			for (int t=0; t<=_tempo; t++);
-			WRITE_REG(GPIOB->ODR, 0x81);
-			for (int t=0; t<=_tempo; t++);
-			WRITE_REG(GPIOB->ODR, 0x80);
-			for (int t=0; t<=_tempo; t++);
-			WRITE_REG(GPIOB->ODR, 0x00);
-			for (int t=0; t<=_tempo; t++);
-			m_codeurs.Traitement();
-		}
-
-	}
-	printf("Après : Counter = %ld\n\r", m_codeurs.m_CumulCodeurPosition2);
-}
-

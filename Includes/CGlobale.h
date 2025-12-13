@@ -6,12 +6,7 @@
 
 #include "RessourcesHardware.h"
 #include "console_interactive_menu.h"
-#include "ssd1306.h"
-#include "CAsservissement.h"
-#include "CTelemetre.h"
 #include "CCodeurs.h"
-#include "CAsservissementVitesse.h"
-#include "CAsservissementPosition.h"
 
 typedef enum {
     MODE_AUTONOME = 0,
@@ -50,36 +45,28 @@ public :
     void Run(void);
 
     CMenuApp m_menu_interactive;
-    SSD1306 m_lcd;
-    CAsservissement m_asservissement;
-    CTelemetre m_telemetre;
 
     //! Gestion des codeurs de position
     CCodeurs m_codeurs;
 
-    //! Gestion de l'asservissement
-    CAsservissementVitesse m_asservissement_vitesse;
-    CAsservissementPosition m_asservissement_position;
-
     // Simulation des pas codeurs
     void SimuPasCodeurs(int count);
 
+
+    bool test_Mot1_Sens1;
+    bool test_Mot1_Sens2;
+    bool test_Mot2_Sens1;
+    bool test_Mot2_Sens2;
+    bool test_Mot3_Sens1;
+    bool test_Mot3_Sens2;
+    bool test_Etor1;
+    bool test_Etor2;
+    bool test_Etor3;
+    bool test_Led1;
+    bool test_Led2;
+    bool test_CdeMosfet;
+
 private : 
-
-    //variables pour la stratégie
-    int couleur_equipe;
-    bool fin_match;
-    int compteur_action;
-    bool action_toggle;
-    float duree_match;
-    int ETAPE;
-    float signe_equipe;
-
-    //! Initialisation de la stratégie
-    void initStrategie();
-    //! pas élémentaire d'execution de la stratégie
-    void Strategie();
-    void TestAssert();
 
     //! Gestion du mode autonome
     void ModeAutonome(void);
@@ -91,10 +78,8 @@ private :
     void SequenceurModePiloteTerminal(void);
 
 
-
     //! Gestion du mode piloté via Anaconbot
     void ModePiloteLaBotBox(void);
-
     //! Gestion du mode piloté par terminal
     void ModePiloteTerminal(void);
     //! Reception RS232 en IRQ
@@ -102,7 +87,6 @@ private :
 
     //! Lecture eeprom
     void readEEPROM();
-
 };
 
 extern CGlobale Application;

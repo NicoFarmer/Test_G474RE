@@ -36,7 +36,6 @@ CGlobale::~CGlobale()
 */
 void CGlobale::Run(void)
 {
-    CdeMoteur1(0);
     // Lecture des paramètres EEPROM
     readEEPROM();
 
@@ -44,20 +43,6 @@ void CGlobale::Run(void)
     // Temps nécessaire en pratique pour que l'écran tactile ai fini de démarrer
     // avant de commencer à  lui en envoyer des messages (et d'en recevoir)
     //wait_ms(3000);
-   m_lcd.Init();
-   m_lcd.GotoXY (20,0);
-   m_lcd.Puts ("CRLG", &Font_16x26, SSD1306::SSD1306_COLOR_WHITE);
-   m_lcd.GotoXY (30, 40);
-   m_lcd.Puts ("PAMI", &Font_11x18, SSD1306::SSD1306_COLOR_WHITE);
-   m_lcd.UpdateScreen();
-
-   m_telemetre.init();
-   //m_asservissement.Init();
-
-   //m_asservissement_vitesse.setPIDCoef(0.001*6, 0.0001*20*3, 0);
-   m_asservissement_vitesse.setPIDCoef(0.001*3, 0.0001*20, 0);
-   m_asservissement_vitesse.setZoneMorteMoteur(4);
-   //m_asservissement_vitesse.activeDebug();
 
 
     switch(ModeFonctionnement) {

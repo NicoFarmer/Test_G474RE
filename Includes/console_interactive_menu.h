@@ -16,10 +16,36 @@ public:
     void send_to_console(char msg[]);  // méthode virtuelle pure ré-implémentée
 
     void page1();
-    void page_cde_moteurs();
     void page_capteurs();
-    void page_servos();
     void page_asservissement();
+
+    // ___________________________________
+    // Les moteurs
+    void page_cde_moteurs();
+
+    bool arret_moteurs();
+    bool cde_mot_G_M1();
+    bool cde_mot_G_M2();
+    bool cde_mot_G_M3();
+    bool cde_mot_G_P1();
+    bool cde_mot_G_P2();
+    bool cde_mot_G_P3();
+
+    bool cde_mot_D_M1();
+    bool cde_mot_D_M2();
+    bool cde_mot_D_M3();
+    bool cde_mot_D_P1();
+    bool cde_mot_D_P2();
+    bool cde_mot_D_P3();
+
+    bool cde_mot_M3_M1();
+    bool cde_mot_M3_M2();
+    bool cde_mot_M3_M3();
+    bool cde_mot_M3_P1();
+    bool cde_mot_M3_P2();
+    bool cde_mot_M3_P3();
+
+
 
     bool simu_codeur();
 
@@ -34,23 +60,6 @@ public:
 
     bool action_read_params();
 
-    bool action_moteurG_stop();
-    bool action_moteurG_5pct();
-    bool action_moteurG_7pct();
-    bool action_moteurG_10pct();
-    bool action_moteurG_50pct();
-    bool action_moteurG_100pct();
-    bool action_moteurG_M5pct();
-    bool action_moteurG_M50pct();
-    bool action_moteurG_M100pct();
-
-    bool action_moteurD_stop();
-    bool action_moteurD_10pct();
-    bool action_moteurD_50pct();
-    bool action_moteurD_100pct();
-    bool action_moteurD_M10pct();
-    bool action_moteurD_M50pct();
-    bool action_moteurD_M100pct();
 
     bool action_asserv_vitesse_1_plus();
     bool action_asserv_vitesse_1_moins();
@@ -63,6 +72,10 @@ public:
     bool read_codeurs();
     bool read_analog_inputs();
     bool read_telemetre();
+
+    // ___________________________________
+    // Servomoteurs
+    void page_servos();
 
     bool page_servo1_1200();
     bool page_servo1_1500();
@@ -78,6 +91,12 @@ public:
     bool page_servo3_1500();
     bool page_servo3_1700();
     bool page_servo3_2000();
+
+    bool page_servo4_1200();
+    bool page_servo4_1500();
+    bool page_servo4_1700();
+    bool page_servo4_2000();
+
 
     bool asser_stop();
     bool asser_resetPos();

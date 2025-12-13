@@ -23,47 +23,84 @@ void toggleLedBuiltin()
 //              COMMANDES MOTEURS
 // ===================================================
 
-// --------------------------------------------------
-void CdeMoteur1(float cde_pourcent)
+/*!
+ * \brief Commande de moteur
+ * \param num_moteur numéro du moteur entre 1 et 4
+ * \param cde_pourcent valeur signée du PWM
+ * PWM = PeriodTimer * (cde_pourcent / 100)
+ *      PeriodTimer = 8500 (htim<xxx>.Init.Period = 8500)
+ *      PWM = 8500/100 * cde_pourcent
+ *      PWM = 85 * cde_pourcent
+ *      (valable pour les 3 channels sur timer)
+ */
+void CdeMoteur(unsigned char num_moteur, float cde_pourcent)
 {
-   if (cde_pourcent == 0) {
-       HAL_GPIO_WritePin(Mot1_Sens1_GPIO_Port, Mot1_Sens1_Pin, GPIO_PIN_RESET);
-       HAL_GPIO_WritePin(Mot1_Sens2_GPIO_Port, Mot1_Sens2_Pin, GPIO_PIN_RESET);
-       __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, htim4.Init.Period);
-   }
-   else if (cde_pourcent > 0) {
-       HAL_GPIO_WritePin(Mot1_Sens1_GPIO_Port, Mot1_Sens1_Pin, GPIO_PIN_RESET);
-       HAL_GPIO_WritePin(Mot1_Sens2_GPIO_Port, Mot1_Sens2_Pin, GPIO_PIN_SET);
-       __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, htim4.Init.Period/100. * (100-cde_pourcent));
-   }
-   else {
-       HAL_GPIO_WritePin(Mot1_Sens1_GPIO_Port, Mot1_Sens1_Pin, GPIO_PIN_SET);
-       HAL_GPIO_WritePin(Mot1_Sens2_GPIO_Port, Mot1_Sens2_Pin, GPIO_PIN_RESET);
-       __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, htim4.Init.Period/100. * (100+cde_pourcent));
-   }
+    const float COEF_CDE_MOTEUR = 85;
+    switch(num_moteur)
+    {
+    // ___________________________________________
+    case 1:
+           if (cde_pourcent == 0) {
+               HAL_GPIO_WritePin(Mot1_Sens1_GPIO_Port, Mot1_Sens1_Pin, GPIO_PIN_RESET);
+               HAL_GPIO_WritePin(Mot1_Sens2_GPIO_Port, Mot1_Sens2_Pin, GPIO_PIN_RESET);
+               __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
+           }
+           else if (cde_pourcent > 0) {
+               HAL_GPIO_WritePin(Mot1_Sens1_GPIO_Port, Mot1_Sens1_Pin, GPIO_PIN_SET);
+               HAL_GPIO_WritePin(Mot1_Sens2_GPIO_Port, Mot1_Sens2_Pin, GPIO_PIN_RESET);
+               __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, COEF_CDE_MOTEUR * cde_pourcent);
+           }
+           else {
+               HAL_GPIO_WritePin(Mot1_Sens1_GPIO_Port, Mot1_Sens1_Pin, GPIO_PIN_RESET);
+               HAL_GPIO_WritePin(Mot1_Sens2_GPIO_Port, Mot1_Sens2_Pin, GPIO_PIN_SET);
+               __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, COEF_CDE_MOTEUR * (-cde_pourcent));
+           }
+        break;
+    // ___________________________________________
+    case 2:
+           if (cde_pourcent == 0) {
+               HAL_GPIO_WritePin(Mot2_Sens1_GPIO_Port, Mot2_Sens1_Pin, GPIO_PIN_RESET);
+               HAL_GPIO_WritePin(Mot2_Sens2_GPIO_Port, Mot2_Sens2_Pin, GPIO_PIN_RESET);
+               __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
+           }
+           else if (cde_pourcent > 0) {
+               HAL_GPIO_WritePin(Mot2_Sens1_GPIO_Port, Mot2_Sens1_Pin, GPIO_PIN_RESET);
+               HAL_GPIO_WritePin(Mot2_Sens2_GPIO_Port, Mot2_Sens2_Pin, GPIO_PIN_SET);
+               __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, COEF_CDE_MOTEUR * cde_pourcent);
+           }
+           else {
+               HAL_GPIO_WritePin(Mot2_Sens1_GPIO_Port, Mot2_Sens1_Pin, GPIO_PIN_SET);
+               HAL_GPIO_WritePin(Mot2_Sens2_GPIO_Port, Mot2_Sens2_Pin, GPIO_PIN_RESET);
+               __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, COEF_CDE_MOTEUR * (-cde_pourcent));
+           }
+        break;
+    // ___________________________________________
+    case 3:
+        if (cde_pourcent == 0) {
+            HAL_GPIO_WritePin(Mot3_Sens1_GPIO_Port, Mot3_Sens1_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(Mot3_Sens2_GPIO_Port, Mot3_Sens2_Pin, GPIO_PIN_RESET);
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, 0);
+        }
+        else if (cde_pourcent > 0) {
+            HAL_GPIO_WritePin(Mot3_Sens1_GPIO_Port, Mot3_Sens1_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(Mot3_Sens2_GPIO_Port, Mot3_Sens2_Pin, GPIO_PIN_RESET);
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, COEF_CDE_MOTEUR * cde_pourcent);
+        }
+        else {
+            HAL_GPIO_WritePin(Mot3_Sens1_GPIO_Port, Mot3_Sens1_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(Mot3_Sens2_GPIO_Port, Mot3_Sens2_Pin, GPIO_PIN_SET);
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, COEF_CDE_MOTEUR * (-cde_pourcent));
+        }
+        break;
+    // ___________________________________________
+    default:
+        break;
+    }
 }
 
-// --------------------------------------------------
-void CdeMoteur2(float cde_pourcent)
-{
-	/*
-   if (cde_pourcent == 0) {
-       HAL_GPIO_WritePin(Mot2_Sens1_GPIO_Port, Mot2_Sens1_Pin, GPIO_PIN_RESET);
-       HAL_GPIO_WritePin(Mot2_Sens2_GPIO_Port, Mot2_Sens2_Pin, GPIO_PIN_RESET);
-       __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, 0);
-   }
-   else if (cde_pourcent < 0) {
-       HAL_GPIO_WritePin(Mot2_Sens1_GPIO_Port, Mot2_Sens1_Pin, GPIO_PIN_SET);
-       HAL_GPIO_WritePin(Mot2_Sens2_GPIO_Port, Mot2_Sens2_Pin, GPIO_PIN_RESET);
-       __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, htim4.Init.Period/100. * -(cde_pourcent));
-   }
-   else {
-       HAL_GPIO_WritePin(Mot2_Sens1_GPIO_Port, Mot2_Sens1_Pin, GPIO_PIN_RESET);
-       HAL_GPIO_WritePin(Mot2_Sens2_GPIO_Port, Mot2_Sens2_Pin, GPIO_PIN_SET);
-       __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, htim4.Init.Period/100. * (cde_pourcent));
-   }
-   */
-}
+
+
+
 
 
 
@@ -71,24 +108,12 @@ void CdeMoteur2(float cde_pourcent)
 //                      CODEURS
 // ===================================================
 
-// --------------------------------------------------
-short getCodeur1()
-{
-    return __HAL_TIM_GET_COUNTER(&htim2);
-}
-
-// --------------------------------------------------
-short getCodeur2()
-{
-    return __HAL_TIM_GET_COUNTER(&htim3);
-}
-
 signed short getCodeur(int num)
 {
     switch(num)
     {
-    case 1 : return __HAL_TIM_GET_COUNTER(&htim2);
-    case 2 : return __HAL_TIM_GET_COUNTER(&htim3);
+    case 1 : return __HAL_TIM_GET_COUNTER(&htim4);
+    case 2 : return __HAL_TIM_GET_COUNTER(&htim8);
     //case 3 : return __HAL_TIM_GET_COUNTER(&htim4); break;
     //case 4 : return __HAL_TIM_GET_COUNTER(&htim8); break;
     default: break;
@@ -107,10 +132,10 @@ unsigned int readAnalog(int num_eana)
     int adc_channel;
     switch(num_eana)
     {
-    case 1: adc_channel = ADC_CHANNEL_1;    break;  // Eana1 : PA0
-    case 2: adc_channel = ADC_CHANNEL_17;   break;  // Eana2 : PA4
-    case 3: adc_channel = ADC_CHANNEL_3;    break;  // Eana3 : PA6
-    case 4: adc_channel = ADC_CHANNEL_10;   break;  // Eana4 : PF1
+    case 1: adc_channel = ADC_CHANNEL_1;	break;	// Eana1 : PA0
+    case 2: adc_channel = ADC_CHANNEL_5;   	break;  // Eana2 : PB14
+    case 3: adc_channel = ADC_CHANNEL_6;    break;  // Eana3 : PC0
+    case 4: adc_channel = ADC_CHANNEL_7;   	break;  // Eana4 : PC1
     default :  // entrée Eana inexistante
         return 0;
     }
@@ -122,14 +147,14 @@ unsigned int readAnalog(int num_eana)
     //sConfig.OffsetNumber = ADC_OFFSET_NONE;
     //sConfig.Offset = 0;
     //sConfig.OffsetSignedSaturation = DISABLE;
-    if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+    if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
     {
         Error_Handler();
     }
-    HAL_ADC_Start(&hadc2);
-    HAL_ADC_PollForConversion(&hadc2, 1000);
-    uint32_t analog_value = HAL_ADC_GetValue(&hadc2);
-    HAL_ADC_Stop(&hadc2);
+    HAL_ADC_Start(&hadc1);
+    HAL_ADC_PollForConversion(&hadc1, 1000);
+    uint32_t analog_value = HAL_ADC_GetValue(&hadc1);
+    HAL_ADC_Stop(&hadc1);
     return analog_value;
 }
 
@@ -143,18 +168,35 @@ float readAnalogVolt(int channel)
 // ===================================================
 //              SERVO MOTEURS
 // ===================================================
-#define T_PWM_SERVO (20e-3)
-void CdeServo1(int ppm1500)
+// _______________________________________________
+//!
+//! \brief Commande d'un servo moteur
+//! \param num_servo numéro du servo moteur (entre 1 et 8)
+//! \param pulse_usec largeur d'impulsion souhaitée en [µsec]
+//! Pulse = ARR * (largeur d’impulsion voulue  en µsec / 20 000µsec)
+//! Pour les 4 servo du TIM2 (32 bits)
+//!     Pulse = (3 400 000/20 000) * largeur d’impulsion voulue  en µsec
+//!     Pulse = 170 * largeur d’impulsion voulue  en µsec
+//!
+void CdeServo(unsigned char num_servo, unsigned int pulse_usec)
 {
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (float)(ppm1500/1e6) / ((float)T_PWM_SERVO/64000));
-}
+    const float COEF_TIM32bits = 170;
 
-void CdeServo2(int ppm1500)
-{
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, (float)(ppm1500/1e6) / ((float)T_PWM_SERVO/64000));
-}
-
-void CdeServo3(int ppm1500)
-{
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (float)(ppm1500/1e6) / ((float)T_PWM_SERVO/64000));
+    switch(num_servo)
+    {
+    case 1 : // Servo1: PB11
+        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, COEF_TIM32bits*pulse_usec);
+        break;
+    case 2 : // Servo2: PA15
+        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, COEF_TIM32bits*pulse_usec);
+        break;
+    case 3 : // Servo3: PA1
+        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, COEF_TIM32bits*pulse_usec);
+        break;
+    case 4 : // Servo4: PB10
+        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, COEF_TIM32bits*pulse_usec);
+        break;
+    default :
+        break;
+    }
 }
