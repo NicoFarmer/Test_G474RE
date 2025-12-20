@@ -80,13 +80,23 @@ void CGlobale::SequenceurModePiloteTerminal(void)
         HAL_GPIO_WritePin(Mot3_Sens1_GPIO_Port, Mot3_Sens1_Pin, (GPIO_PinState)test_Mot3_Sens1);
         HAL_GPIO_WritePin(Mot3_Sens2_GPIO_Port, Mot3_Sens2_Pin, (GPIO_PinState)test_Mot3_Sens2);
 
-        HAL_GPIO_WritePin(Led1_GPIO_Port, Led1_Pin, (GPIO_PinState)test_Led1);
-        HAL_GPIO_WritePin(Led2_GPIO_Port, Led2_Pin, (GPIO_PinState)test_Led2);
+        //HAL_GPIO_WritePin(Led1_GPIO_Port, Led1_Pin, (GPIO_PinState)test_Led1);
+        //HAL_GPIO_WritePin(Led2_GPIO_Port, Led2_Pin, (GPIO_PinState)test_Led2);
         HAL_GPIO_WritePin(Cde_Mosfet_GPIO_Port, Cde_Mosfet_Pin, (GPIO_PinState)test_CdeMosfet);
 
         test_Etor1 = HAL_GPIO_ReadPin(Etor1_GPIO_Port, Etor1_Pin);
         test_Etor2 = HAL_GPIO_ReadPin(Etor2_GPIO_Port, Etor2_Pin);
         test_Etor3 = HAL_GPIO_ReadPin(Etor3_GPIO_Port, Etor3_Pin);
+
+        test_Eana1 = readAnalogVolt(1);
+        test_Eana2 = readAnalogVolt(2);
+        test_Eana3 = readAnalogVolt(3);
+        test_Eana4 = readAnalogVolt(4);
+
+        CdeServo(1, test_Servo1);
+        CdeServo(2, test_Servo2);
+        CdeServo(3, test_Servo3);
+        CdeServo(4, test_Servo4);
 
     }
 
@@ -97,6 +107,7 @@ void CGlobale::SequenceurModePiloteTerminal(void)
         cpt50msec = 0;
         toggleLedBuiltin();
         //printf("%d\n\r", HAL_GetTick());
+        HAL_GPIO_TogglePin(Led1_GPIO_Port, Led1_Pin);
     }
 
     // ______________________________
@@ -118,6 +129,7 @@ void CGlobale::SequenceurModePiloteTerminal(void)
     cpt200msec++;
     if (cpt200msec >= TEMPO_200msec) {
         cpt200msec = 0;
+
 /*
         unsigned char c='5';
         unsigned char r='0';
@@ -131,6 +143,7 @@ void CGlobale::SequenceurModePiloteTerminal(void)
     cpt500msec++;
     if (cpt500msec >= TEMPO_500msec) {
         cpt500msec = 0;
+        HAL_GPIO_TogglePin(Led2_GPIO_Port, Led2_Pin);
     }
     // ______________________________
     cpt1sec++;

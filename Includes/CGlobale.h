@@ -65,6 +65,15 @@ public :
     bool test_Led1;
     bool test_Led2;
     bool test_CdeMosfet;
+    float test_Eana1;
+    float test_Eana2;
+    float test_Eana3;
+    float test_Eana4;
+
+    int test_Servo1;
+    int test_Servo2;
+    int test_Servo3;
+    int test_Servo4;
 
 private : 
 
