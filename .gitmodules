@@ -4,3 +4,6 @@
 [submodule "ext/CppRobLib"]
 	path = ext/CppRobLib
 	url = https://github.com/CRLG/CppRobLib
+[submodule "ext/CppRobLibSTM32"]
+	path = ext/CppRobLibSTM32
+	url = https://github.com/CRLG/CppRobLibSTM32
